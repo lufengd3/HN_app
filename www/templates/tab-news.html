@@ -1,0 +1,18 @@
+<ion-view view-title="News">
+  <ion-content>
+	<div class="card" ng-repeat="item in news">
+		<a href="#/passage/{{ item.id }}" 
+		  style="text-decoration: none" 
+		  ng-click="setGlobalNewsInfo(item.id, item.url, item.title)">
+		<div class="item item-text-wrap">
+			{{ item.title }}
+		</div>
+	  </a>
+		<span class="card-footer-left domain">{{ item.url | domain}}</span>
+		<span class="card-footer-right time">{{ item.time | date: 'MM-dd hh:mm' }}</span>
+	</div>
+
+	<ion-infinite-scroll on-infinite="loadMore()" distance="3%"></ion-infinite-scroll>
+  </ion-content>
+</ion-view>
+

@@ -1,0 +1,28 @@
+<div class="bar bar-header bar-positive">
+	<button class="button button-icon ion-ios-arrow-thin-left" ng-click="goBack()">
+</div>
+
+<ion-content class="padding has-header has-footer">
+<div class="passage-header">
+	<p>{{ title }}</p>
+	<span>{{ url | domain }}</span>
+</div>
+<div id="passage"></div>
+<!-- <hr/> -->
+<!-- <a href='#' ng-click="openInBrowser()">Read from source</a> -->
+</ion-content>
+
+<div class="tabs tabs-icon-only tabs-positive" >
+	<a class="tab-item" ng-click="setFavoriate(!favoriate)"> 
+		<i class="{{favoriateClass}}"></i>
+	</a>
+    <a class="tab-item">
+	    <i class="icon ion-ios-chatboxes-outline"></i>
+	</a>
+    <a class="tab-item">
+	    <i class="icon ion-ios-paperplane-outline"></i>
+	</a>
+	<a class="tab-item" ng-click="popover.show($event)">
+		<i class="icon ion-ios-more-outline"></i>
+	</a>
+</div>

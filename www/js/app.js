@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.filters'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -21,7 +21,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.tabs.position('bottom');
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -30,7 +31,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   $stateProvider
 
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: "/tab",
     abstract: true,
     templateUrl: "templates/tabs.html"
@@ -38,12 +39,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   // Each tab has its own nav history stack:
 
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.news', {
+    url: '/news',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-news': {
+        templateUrl: 'templates/tab-news.html',
+        controller: 'NewsCtrl'
       }
     }
   })
@@ -57,27 +58,40 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
 
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+  .state('tab.chat-detail', {
+	url: '/chats/:chatId',
+	views: {
+	  'tab-chats': {
+		templateUrl: 'templates/chat-detail.html',
+		controller: 'ChatDetailCtrl'
+	  }
+	}
+  })
+
+  .state('passage', {
+	url: '/passage/:id',
+	controller: 'PassageCtrl',
+	templateUrl: 'templates/passage.html'
+  })
+
+  .state('comments', {
+	url: '/comments',
+	templateUrl: 'templates/comments.html',
+  })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/news');
 
 });
+
+// define global variables
+var PASSAGE_INFO = {
+  'id': '',	   // 当前阅读的文章的id
+  'title': '', // 当前阅读的文章的标题
+  'url': ''	   // 当前阅读的文章的url
+};	
+var DEVICE_INFO = {
+	'width': ''
+};
+

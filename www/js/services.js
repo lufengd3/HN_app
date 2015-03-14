@@ -47,4 +47,69 @@ angular.module('starter.services', [])
       return null;
     }
   };
+})
+
+.factory('News', function($http) {
+  // Some fake testing data
+  var news = [{
+    id: 0,
+    title: 'Ben Sparrow',
+	domain: 'www.baidu.com',
+	url: 'http://www.baidu.com',
+  	time: '03-10 12:24'
+  }, {
+    id: 1,
+    title: 'Max Lynx, Hey, it\'s me',
+	domain: 'www.tmall.com',
+    url: 'avatars3.githubusercontent.com',
+  	time: '03-10 12:24'
+  }, {
+    id: 2,
+    title: 'Did you get the ice cream?',
+    url: 'www.alibaba.com',
+  	time: '03-10 12:24'
+  }, {
+    id: 3,
+    title: 'I should buy a boat',
+    url: 'www.qq.com',
+  	time: '03-10 12:24'
+  }, {
+    id: 4,
+    title: 'Look at my mukluks!',
+    url: 'www.baidu.com',
+  	time: '03-10 12:24'
+  }];
+
+  // var getNews = function($http) {
+	// $http.get('https://hacker-news.firebaseio.com/v0/topstories.json')
+	  // .success(function (data, status, headers, config) {
+		// return getNewsDetail($http, data);
+	  // })
+	  // .error(function(data) {
+		// alert('Get News Error: ' + data)
+	  // })
+  // };
+
+  // var getNewsDetail = function($http, data) {
+	// var news = [];
+	// if (data.length) {
+	  // for (var i =0; i < data.length; i++) {
+		// $http.get('https://hacker-news.firebaseio.com/v0/item/' + data[i]  +'.json')
+		  // .success(function (data, status) {
+			// news.push(data)
+		  // })
+		  // .error(function(data) {
+			// alert('Get News Detail Error: ' + data)
+		  // })
+	  // }
+	// }
+
+	// return news;
+  // }
+
+  return {
+    all: function() {
+      return news;
+    }
+  };
 });

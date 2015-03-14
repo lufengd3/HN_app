@@ -1,1 +1,42 @@
-/* Empty. Add your own CSS if you like */
+/* self defined style */
+.card-footer-left {
+	float: left;
+	margin-left: 15px;
+	font-size: 12px;
+}
+.card-footer-right {
+	float: right;
+	margin-right: 15px;
+	font-size: 12px;
+}
+
+ion-popover-view.fit {
+  height: auto !important;
+  width: 200px !important;
+}
+
+ion-popover-view.fit ion-content {
+  position: relative !important;
+}
+
+.platform-android ion-popover-view.fit {
+  margin-top: -3px !important;
+}
+
+/* passage title */
+.passage-header {
+	background-color: #d9dbdf;
+	padding: 20px 5px;
+	margin-bottom: 20px;
+}
+
+.passage-header p {
+	font-size: 24px;
+	line-height: 25px;
+}
+
+.comments-count {
+	display: inline-block;
+	margin-left: 18px;
+}
+
