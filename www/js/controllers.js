@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
 .controller('NewsCtrl', function($scope, $ionicLoading, $ionicScrollDelegate, 
-	  $cordovaNetwork, $cordovaToast, $timeout, HnService) {
+	  $cordovaNetwork, $cordovaToast, HnService) {
 
   $scope.saveTopNewsId = function() {
 	$scope.error = false;
@@ -19,7 +19,20 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 	  })
   }
 
-  $scope.saveTopNewsId();
+  $scope.setGlobalNewsInfo = function(id, url, title) {
+	PASSAGE_INFO.id = id;	
+	PASSAGE_INFO.url = url;
+  	PASSAGE_INFO.title = title;
+  }
+
+  $scope.loadMore = function() {
+	// fetch news add to newsList
+	HnService.loadNews()
+  	  .then(function(data) {
+	  	$scope.newsList = $scope.newsList.concat(data);
+		$scope.$broadcast('scroll.infiniteScrollComplete');
+	  })
+  }
 
   $scope.$on('HnService.topNewsIdSvaed', function() {
 	$scope.loadNews();
@@ -47,38 +60,26 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 	  $ionicScrollDelegate.scrollTo(SCROLL_POSITION.left, SCROLL_POSITION.top)
   })
 
-  $scope.setGlobalNewsInfo = function(id, url, title) {
-	PASSAGE_INFO.id = id;	
-	PASSAGE_INFO.url = url;
-  	PASSAGE_INFO.title = title;
-  }
 
-  $scope.loadMore = function() {
-	// fetch news add to newsList
-	HnService.loadNews()
-  	  .then(function(data) {
-	  	$scope.newsList = $scope.newsList.concat(data);
-		$scope.$broadcast('scroll.infiniteScrollComplete');
-	  })
-  }
+  $scope.saveTopNewsId();
 
 })
 
-.controller('PassageCtrl', function($scope, $ionicPopover, $ionicPopup, $ionicHistory, $cordovaSocialSharing,
-	  $ionicLoading, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $timeout, $sce, HnService) 
+.controller('PassageCtrl', function($scope, $ionicPopover, $ionicPopup, $ionicHistory,
+	  $cordovaSocialSharing, $ionicLoading, $cordovaClipboard, $cordovaToast, 
+	  $ionicScrollDelegate, $sce, HnService) 
 {
   $scope.initPage = function() {
+	$ionicScrollDelegate.scrollTop();
 	$ionicLoading.show();
 	$scope.fontSize = window.localStorage['fontSize']; 
-	$ionicScrollDelegate.scrollTop();
 	$scope.title = PASSAGE_INFO.title;
 	$scope.url = PASSAGE_INFO.url;
 	$scope.passageHtml = '';
 	HnService.getPassage(PASSAGE_INFO.id)
-	// HnService.getPassage(12345)
 	  .then(function(data) {
 		if (data == null) {
-		  // my server not crawl the content yet
+		  // server does not crawl the content yet
 		  data = "<p>Sorry, maybe the spider is sleeping, you can read in browser.</p>";
 		}
 		$scope.passageHtml = $sce.trustAsHtml(data);
@@ -138,8 +139,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
 	var message = "#HackerNews Today# " + $scope.title;
   	$cordovaSocialSharing.share(message, "", "", $scope.url)
 	  .then(function(result) {
-		if (result)
-		  $cordovaToast.showShortBottom('Share Success.');
+		  $cordovaToast.showShortBottom("Share Success");
+	  }, function(err) {
+		  $cordovaToast.showShortBottom('Error: ' + err);
 	  })
   }
 

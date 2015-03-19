@@ -15,7 +15,7 @@
 	<span class="card-footer-middle" ng-if="item.data.kids.length">{{ item.data.kids.length }} comments</span>
 	<span class="card-footer-right">{{ item.data.time * 1000 | date:'MM-dd HH:mm' }}</span>
 </div>
-<div class="error" ng-show="error" on-drag-down="saveTopNewsId()">
+<div class="error" ng-show="error" on-swipe-down="saveTopNewsId()">
 	<p>Network error.</p><p>Scroll down to refresh.</p>
 </div>
 <ion-infinite-scroll ng-if="newsList.length" on-infinite="loadMore()"></ion-infinite-scroll>

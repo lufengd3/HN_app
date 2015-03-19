@@ -7,6 +7,7 @@ angular.module('starter.services', ['firebase'])
 	// var newsIdList = [9205435,9205177,9204724,9204111,9203946,9204954,9204954];
 	var deferred = $q.defer();
 	var urlCalls = [];
+
 	angular.forEach(newsIdList, function(newsId) {
 	  urlCalls.push($http.get("https://hacker-news.firebaseio.com/v0/item/" + newsId + ".json"))
 	})
@@ -28,7 +29,7 @@ angular.module('starter.services', ['firebase'])
 
   return {
 	getPassage: function(newsId) {
-	  return $http.jsonp("http://201205917.xyz/passage/" + newsId + ".json?callback=JSON_CALLBACK")
+	  return $http.jsonp("http://abc.xyz/passage/" + newsId + ".json?callback=JSON_CALLBACK")
 		.then(function(res) {
 			$rootScope.$broadcast('HnService.passageLoaded')
 			return res.data.content;	
