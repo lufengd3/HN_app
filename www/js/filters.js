@@ -12,6 +12,9 @@ angular.module('starter.filters', [])
 	}
 })
 
-.filter('escape', function() {
-    return window.encodeURIComponent;
+.filter('formatCommentHtml', function() {
+    return function(html) {
+		html = String(html).replace(/<[\/]?p>/gm, '');
+		return html.replace(/href=['"](.*)['"]/gm, 'href=""');
+	}
 })

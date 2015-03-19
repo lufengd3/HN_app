@@ -4,22 +4,17 @@
 
 <ion-content class="padding has-header has-footer">
 <div class="passage-header">
-	<p>{{ title }}</p>
-	<span>{{ url | domain }}</span>
+	<p ng-bind="title"></p>
+	<span ng-bind="url | domain"></span>
 </div>
-<div id="passage"></div>
-<!-- <hr/> -->
-<!-- <a href='#' ng-click="openInBrowser()">Read from source</a> -->
+<div class="passage-content" ng-style="{'font-size': fontSize + 'px'}" ng-bind-html="passageHtml"></div>
 </ion-content>
 
 <div class="tabs tabs-icon-only tabs-positive" >
-	<a class="tab-item" ng-click="setFavoriate(!favoriate)"> 
-		<i class="{{favoriateClass}}"></i>
-	</a>
-    <a class="tab-item">
+    <a class="tab-item" href="#/comments">
 	    <i class="icon ion-ios-chatboxes-outline"></i>
 	</a>
-    <a class="tab-item">
+    <a class="tab-item" ng-click="share()">
 	    <i class="icon ion-ios-paperplane-outline"></i>
 	</a>
 	<a class="tab-item" ng-click="popover.show($event)">

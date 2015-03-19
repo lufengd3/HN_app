@@ -2,25 +2,31 @@
 .card-footer-left {
 	float: left;
 	margin-left: 15px;
-	font-size: 12px;
+	width: 58px;
+}
+.card-footer-middle {
+	float: left;
+	margin-left: 15px;
 }
 .card-footer-right {
 	float: right;
 	margin-right: 15px;
+}
+[class^=card\-footer] {
 	font-size: 12px;
+	color: #aaa;
 }
 
 ion-popover-view.fit {
   height: auto !important;
-  width: 200px !important;
 }
 
 ion-popover-view.fit ion-content {
   position: relative !important;
 }
 
-.platform-android ion-popover-view.fit {
-  margin-top: -3px !important;
+ion-popover-view.fit {
+  margin-top: -2px !important;
 }
 
 /* passage title */
@@ -35,8 +41,44 @@ ion-popover-view.fit ion-content {
 	line-height: 25px;
 }
 
-.comments-count {
-	display: inline-block;
-	margin-left: 18px;
+.passage-content p {
+	font-size: inherit;
 }
 
+img {
+  max-width: 100%;
+}
+
+/* comments page style */
+.comment-author {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.comment-time {
+    float: right;
+}
+
+.comment-content {
+	white-space: normal !important;
+}
+
+.error {
+	margin-top: 200px;
+}
+.error p {
+	font-size: 20px;
+	text-align: center;
+}
+.fontPopover {
+	height: 100px;
+	width: 80%;
+	top: 35% !important;
+	left: 10% !important;
+}
+.fontPopoverDiv {
+	border-bottom: none;
+}
+.fontPopover p {
+	text-align: center;
+}

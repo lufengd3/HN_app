@@ -1,1 +1,17 @@
-<h1>this is comments</h1>
+<div class="bar bar-header bar-positive">
+	<button class="button button-icon ion-ios-arrow-thin-left" ng-click="goBack()"></button>
+	<h1 class="title">Comments</h1>
+</div>
+
+<ion-content class="has-header">
+<ion-list>
+  <ion-item ng-repeat="comment in comments" >
+	<p ng-click="hide = !hide">
+	<span class="comment-author" ng-bind="comment.by"> </span> <i ng-class="setArrowClass(hide)"></i>
+	<span class="comment-time" ng-bind="comment.time * 1000 | date: 'MM-dd HH:mm' "></span>
+	<div ng-hide="hide" class="comment-content" 
+	  ng-style="{'font-size': fontSize +'px'}"
+	  ng-bind-html="showHtml(comment.text) | formatCommentHtml"></div>
+  </ion-item>
+</ion-list>
+</ion-content>

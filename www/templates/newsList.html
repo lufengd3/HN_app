@@ -1,0 +1,23 @@
+<div class="bar bar-header bar-positive">
+	<h1 class="title">Hacker News</h1>
+</div>
+
+<ion-content class="has-header">
+<div class="card" ng-repeat="item in newsList" ng-if="item.data.url != ''">
+	<a href="#/passage/{{ item.data.id }}" 
+	  style="text-decoration: none" 
+	  ng-click="setGlobalNewsInfo(item.data.id, item.data.url, item.data.title)">
+	<div class="item item-text-wrap">
+		{{ item.data.title }}
+	</div>
+	</a>
+	<span class="card-footer-left">{{ item.data.score }} points</span>
+	<span class="card-footer-middle" ng-if="item.data.kids.length">{{ item.data.kids.length }} comments</span>
+	<span class="card-footer-right">{{ item.data.time * 1000 | date:'MM-dd HH:mm' }}</span>
+</div>
+<div class="error" ng-show="error" on-drag-down="saveTopNewsId()">
+	<p>Network error.</p><p>Scroll down to refresh.</p>
+</div>
+<ion-infinite-scroll ng-if="newsList.length" on-infinite="loadMore()"></ion-infinite-scroll>
+</ion-content>
+

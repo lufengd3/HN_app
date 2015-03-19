@@ -1,34 +1,51 @@
 angular.module('starter.controllers', ['ionic', 'ngCordova'])
 
-.controller('NewsCtrl', ['$scope', '$http', '$location', function($scope, $http) {
-  // $scope.news = News.all();
-  $scope.news = [];
-  var getNews = function() {
-	$http.get('https://hacker-news.firebaseio.com/v0/topstories.json')
-	  .success(function (data, status, headers, config) {
-		getNewsDetail(data);
-	  })
-	  .error(function(data) {
-		alert('Get News Error: ' + data)
-	  })
-  };
+.controller('NewsCtrl', function($scope, $ionicLoading, $ionicScrollDelegate, 
+	  $cordovaNetwork, $cordovaToast, $timeout, HnService) {
 
-  var getNewsDetail = function(data) {
-	var news = [];
-	if (data.length) {
-	  for (var i =0; i < 8; i++) {
-		$http.get('https://hacker-news.firebaseio.com/v0/item/' + data[i]  +'.json')
-		  .success(function (data, status) {
-			$scope.news.push(data)
-		  })
-		  .error(function(data) {
-			alert('Get News Detail Error: ' + data)
-		  })
-	  }
-	}
+  $scope.saveTopNewsId = function() {
+	$scope.error = false;
+	$ionicLoading.show();
+  	HnService.saveTopNewsId()
   }
 
-  getNews();
+  $scope.loadNews = function() {
+	$ionicLoading.show();
+	$scope.error = false;
+  	HnService.loadNews()
+	  .then(function(data) {
+		$ionicLoading.hide();
+	  	$scope.newsList = data;
+	  })
+  }
+
+  $scope.saveTopNewsId();
+
+  $scope.$on('HnService.topNewsIdSvaed', function() {
+	$scope.loadNews();
+  })
+
+  $scope.$on('HnService.newsLoadedOff', function() {
+	$cordovaToast.showLongCenter('It\' time to have a rest :)')	
+	$scope.$broadcast('scroll.infiniteScrollComplete');
+  })
+
+  $scope.$on('HnService.indexError', function() {
+	$scope.error = true;
+  	$ionicLoading.hide();
+	if ($cordovaNetwork.isOffline()) {
+	  $cordovaToast.showLongCenter('Network unavailable. Try anain later.')	
+	}
+  })
+
+  $scope.$on('$ionicView.beforeLeave', function() {
+  	SCROLL_POSITION = $ionicScrollDelegate.getScrollPosition()
+  })
+
+  $scope.$on('$ionicView.beforeEnter', function() {
+	if (SCROLL_POSITION != '')
+	  $ionicScrollDelegate.scrollTo(SCROLL_POSITION.left, SCROLL_POSITION.top)
+  })
 
   $scope.setGlobalNewsInfo = function(id, url, title) {
 	PASSAGE_INFO.id = id;	
@@ -37,72 +54,68 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
   }
 
   $scope.loadMore = function() {
-	loaded();
-	clearTimeout(loaded);
+	// fetch news add to newsList
+	HnService.loadNews()
+  	  .then(function(data) {
+	  	$scope.newsList = $scope.newsList.concat(data);
+		$scope.$broadcast('scroll.infiniteScrollComplete');
+	  })
   }
 
-  var loaded = setTimeout(function() {
-	$scope.$broadcast('scroll.infiniteScrollComplete');
-  }, 3000)
-
-}])
-
-.controller('ChatsCtrl', function($scope, Chats) {
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  }
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('PassageCtrl', function($scope, $stateParams, 
-	  $http, $ionicPopover, $ionicHistory, $cordovaClipboard, $ionicScrollDelegate) 
+.controller('PassageCtrl', function($scope, $ionicPopover, $ionicPopup, $ionicHistory, $cordovaSocialSharing,
+	  $ionicLoading, $cordovaClipboard, $cordovaToast, $ionicScrollDelegate, $timeout, $sce, HnService) 
 {
   $scope.initPage = function() {
+	$ionicLoading.show();
+	$scope.fontSize = window.localStorage['fontSize']; 
 	$ionicScrollDelegate.scrollTop();
 	$scope.title = PASSAGE_INFO.title;
 	$scope.url = PASSAGE_INFO.url;
-	
-	$http.jsonp('http://201205917.xyz/passage/' + $stateParams.id +'.json?callback=JSON_CALLBACK')
-	  .success(function (data, status, headers, config) {
-		if (data.content == null) {
-			data.content = '<p>获取内容失败，请在浏览器中查看</p>';
+	$scope.passageHtml = '';
+	HnService.getPassage(PASSAGE_INFO.id)
+	// HnService.getPassage(12345)
+	  .then(function(data) {
+		if (data == null) {
+		  // my server not crawl the content yet
+		  data = "<p>Sorry, maybe the spider is sleeping, you can read in browser.</p>";
 		}
-		document.getElementById('passage').innerHTML = data.content;
-	  }).error(function(data) {
-		alert("jsonp error: " + data);
-	  });
+		$scope.passageHtml = $sce.trustAsHtml(data);
+	  })  
   }
 
-  $scope.initPage();
-
-  $scope.$on("$ionicView.beforeEnter", function() {
-	if (PASSAGE_INFO.id != $stateParams.id) {
-		$scope.initPage();
-	}
+  $scope.$watch(PASSAGE_INFO.id, function() {
+	$scope.initPage();
   })
-
 
   $scope.openInBrowser = function() {
 	window.open($scope.url, "_system");
   }
 
-  // passage menu
-  $scope.favoriate = false;
-  $scope.favoriateClass = ($scope.favoriate ? 'icon ion-ios-star' : 'icon ion-ios-star-outline');
+  $scope.$on('HnService.passageLoaded', function() {
+	$ionicLoading.hide();
+  })
 
-  $scope.setFavoriate = function(like) {
-	$scope.favoriate = like;
-	$scope.favoriateClass = (like ? 'icon ion-ios-star' : 'icon ion-ios-star-outline');
-  }
+  $scope.$on('HnService.passageError', function() {
+	$ionicLoading.hide();
+	$scope.passageHtml = "<p>Sorry, maybe the spider is sleeping, you can read in browser.</p>";
+  })
 
-  $ionicPopover.fromTemplateUrl('templates/passagePopover.html', {
+  $ionicPopover.fromTemplateUrl('templates/settingPop.html', {
 	scope: $scope,
   }).then(function(popover) {
 	$scope.popover = popover;
+  });
+
+  $ionicPopover.fromTemplateUrl('templates/adjustFontPop.html', {
+	scope: $scope,
+  }).then(function(popover) {
+	$scope.fontPopover = popover;
+  });
+  
+  $scope.$on('fontsizeChanged', function(data) {
+ 	$scope.fontSize = data['fontSize']; 
   });
 
   $scope.goBack = function() {
@@ -110,16 +123,89 @@ angular.module('starter.controllers', ['ionic', 'ngCordova'])
   }
 
   $scope.scrollTop = function() {
-	$ionicScrollDelegate.scrollTop();
+	$ionicScrollDelegate.scrollTop(true);
   }
 
   $scope.copyUrl = function() {
   	$cordovaClipboard.copy(PASSAGE_INFO.url)
-  		.then(function() {
-			alert('已复制到剪贴板');
-		}, function() {
-			alert('复制失败');
-		})
+	  .then(function() {
+		$cordovaToast.showShortBottom('Copy Success.');
+	  })
   }
 
+  // social share
+  $scope.share = function() {
+	var message = "#HackerNews Today# " + $scope.title;
+  	$cordovaSocialSharing.share(message, "", "", $scope.url)
+	  .then(function(result) {
+		if (result)
+		  $cordovaToast.showShortBottom('Share Success.');
+	  })
+  }
+
+})
+
+.controller('CommentCtrl', function($scope, $http, $ionicHistory, $sce, 
+	  $ionicLoading, HnService) {
+
+  $scope.hide = false;
+  $scope.comments = [];
+  $scope.fontSize = window.localStorage['fontSize']; 
+
+  $scope.showHtml = function(html) {
+	return $sce.trustAsHtml(html); 
+  }
+
+  var getComments = function(parentId, parentName) {
+	$http.get("https://hacker-news.firebaseio.com/v0/item/" + parentId + ".json")
+  	  .then(function(res) {
+	    if (res.data['kids'] != 'undefined') {
+		  angular.forEach(res.data['kids'], function(id) {
+			getComments(id, res.data['by']);
+		  })
+		}	
+		if (parentId != PASSAGE_INFO.id ) {
+		  if (parentName != $scope.passageAuthor) {
+			res.data['text'] = '@' + parentName + ': ' + res.data['text'];
+		  }
+		  $scope.comments = $scope.comments.concat(res.data);
+		} else {
+		  $scope.passageAuthor = res.data['by'];
+		}
+
+		$ionicLoading.hide();
+	  }, function(err) {
+		$ionicLoading.hide();
+		if ($cordovaNetwork.isOffline()) {
+		  $cordovaToast.showLongCenter('Network unavailable. Try anain later.')	
+		} else {
+		  $cordovaToast.showLongCenter('Network error. Try anain later.')	
+		}
+	  })
+  }
+
+  $scope.$on('$ionicView.beforeEnter', function() {
+  	$ionicLoading.show();
+  })
+
+  $scope.$on('fontsizeChanged', function(data) {
+ 	$scope.fontSize = data['fontSize']; 
+  });
+
+  getComments(PASSAGE_INFO.id)
+
+  $scope.goBack = function() {
+  	$ionicHistory.goBack();
+  }
+
+  $scope.setArrowClass = function(hide) {
+  	return hide ? 'ion-arrow-right-b' : 'ion-arrow-down-b';
+  }
+})
+
+.controller('FontCtrl', function($rootScope, $scope) {
+  $scope.adjustFont = function(newVal, oldVal) {
+    window.localStorage['fontSize'] = $scope.fontSize;
+  	$rootScope.$broadcast('fontsizeChanged', {fontSize: $scope.fontSize});
+  }
 })

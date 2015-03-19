@@ -30,43 +30,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
-  .state('tab', {
-    url: "/tab",
-    abstract: true,
-    templateUrl: "templates/tabs.html"
-  })
-
-  // Each tab has its own nav history stack:
-
-  .state('tab.news', {
+  .state('news', {
     url: '/news',
-    views: {
-      'tab-news': {
-        templateUrl: 'templates/tab-news.html',
-        controller: 'NewsCtrl'
-      }
-    }
-  })
-
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-
-  .state('tab.chat-detail', {
-	url: '/chats/:chatId',
-	views: {
-	  'tab-chats': {
-		templateUrl: 'templates/chat-detail.html',
-		controller: 'ChatDetailCtrl'
-	  }
-	}
+	templateUrl: 'templates/newsList.html',
+	controller: 'NewsCtrl'
   })
 
   .state('passage', {
@@ -77,11 +44,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   .state('comments', {
 	url: '/comments',
+  	controller: 'CommentCtrl',
 	templateUrl: 'templates/comments.html',
   })
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/news');
+  $urlRouterProvider.otherwise('/news');
 
 });
 
@@ -91,7 +59,6 @@ var PASSAGE_INFO = {
   'title': '', // 当前阅读的文章的标题
   'url': ''	   // 当前阅读的文章的url
 };	
-var DEVICE_INFO = {
-	'width': ''
-};
+var SCROLL_POSITION = '';
+window.localStorage['fontSize'] = window.localStorage['fontSize'] || 16;
 
