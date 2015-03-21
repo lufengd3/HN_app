@@ -2,13 +2,13 @@
 	<button class="button button-icon ion-ios-arrow-thin-left" ng-click="goBack()">
 </div>
 
-<ion-content class="padding has-header has-footer">
+<ion-content class="padding has-header has-footer" on-swipe-right="goBack()">
 <div class="passage-header">
 	<p ng-bind="title"></p>
 	<span ng-bind="url | domain"></span>
 </div>
 <div class="passage-content" ng-style="{'font-size': fontSize + 'px'}" 
-	 on-swipe-right="goBack()" ng-bind-html="passageHtml"></div>
+    ng-bind-html="passageHtml"></div>
 </ion-content>
 
 <div class="tabs tabs-icon-only tabs-positive" >
