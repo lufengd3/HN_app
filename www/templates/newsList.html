@@ -7,11 +7,9 @@
 	<a href="#/passage/{{ item.data.id }}" 
 	  style="text-decoration: none" 
 	  ng-click="setGlobalNewsInfo(item.data.id, item.data.url, item.data.title)">
-	<div class="item item-text-wrap">
-		{{ item.data.title }}
-	</div>
+    <div class="item item-text-wrap">{{ item.data.title }}</div>
 	</a>
-	<span class="card-footer-left">{{ item.data.score }} points</span>
+  <span class="card-footer-left">{{ item.data.score }} points</span>
 	<span class="card-footer-middle" ng-if="item.data.kids.length">{{ item.data.kids.length }} comments</span>
 	<span class="card-footer-right">{{ item.data.time * 1000 | date:'MM-dd HH:mm' }}</span>
 </div>

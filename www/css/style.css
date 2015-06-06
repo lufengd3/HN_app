@@ -1,16 +1,16 @@
 /* self defined style */
 .card-footer-left {
 	float: left;
-	margin-left: 15px;
-	width: 58px;
+  width: 80px;
+	margin-left: 16px;
 }
 .card-footer-middle {
 	float: left;
-	margin-left: 15px;
+  width: 100px;
 }
 .card-footer-right {
 	float: right;
-	margin-right: 15px;
+  width: 80px;
 }
 [class^=card\-footer] {
 	font-size: 12px;
