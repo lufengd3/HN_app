@@ -1,0 +1,24 @@
+<div class="bar bar-header bar-positive">
+	<button class="button button-icon ion-ios-arrow-thin-left" ng-click="goBack()">
+</div>
+
+<ion-content class="padding has-header has-footer" on-swipe-right="goBack()">
+  <div class="passage-header">
+    <p ng-bind="$root.PASSAGE_INFO.title"></p>
+    <span ng-bind="$root.PASSAGE_INFO.url | domain"></span>
+  </div>
+  <div class="passage-content" ng-style="{'font-size': fontSize + 'px'}" 
+      ng-bind-html="passageHtml"></div>
+</ion-content>
+
+<div class="tabs tabs-icon-only tabs-positive" >
+  <a class="tab-item" href="#/comments/{{$root.PASSAGE_INFO.id}}">
+	    <i class="icon ion-ios-chatboxes-outline"></i>
+	</a>
+    <a class="tab-item" ng-click="share()">
+	    <i class="icon ion-ios-paperplane-outline"></i>
+	</a>
+	<a class="tab-item" ng-click="popover.show($event)">
+		<i class="icon ion-ios-more-outline"></i>
+	</a>
+</div>
