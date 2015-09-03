@@ -3,7 +3,7 @@
 
 HackerNews app power by [ionic framework](http://ionicframework.com/)
 
-[Download Android version](https://github.com/lufengd3/HN_app/blob/master/HN.apk?raw=true)
+[Download Android version](http://7b1ezf.com1.z0.glb.clouddn.com/HN.apk)
 
 ##Screenshot
 ![index](resources/screenshot/index.png)
