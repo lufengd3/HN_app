@@ -1,4 +1,4 @@
-# HackerNews reader app
+# Ionic App Demo
 
 
 HackerNews app power by [ionic framework](http://ionicframework.com/)
